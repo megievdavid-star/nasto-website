@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>НАСТО — тест анимации</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, Arial, sans-serif;
+  background: #080c17;
+  color: white;
+}
+
+.preview {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse at 50% 45%,
+      #182443 0%, #0c1428 48%, #080c17 90%);
+  overflow: hidden;
+}
+
+.glow {
+  position: absolute;
+  width: 75vw;
+  height: 75vw;
+  max-width: 480px;
+  max-height: 480px;
+  border-radius: 50%;
+  background: #347dff;
+  filter: blur(75px);
+  opacity: 0;
+  transform: scale(.3);
+}
+
+.brand {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 80%;
+  max-width: 330px;
+  opacity: 0;
+  transform: scale(.65) translateY(25px);
+}
+
+.brand img {
+  display: block;
+  width: 100%;
+  max-height: 230px;
+  object-fit: contain;
+  margin: auto;
+}
+
+.brand h1 {
+  margin: 14px 0 0;
+  font-size: 32px;
+  letter-spacing: 9px;
+  font-weight: 700;
+}
+
+.controls {
+  position: fixed;
+  bottom: 45px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+}
+
+button {
+  background: #347dff;
+  border: 0;
+  border-radius: 30px;
+  color: white;
+  font-size: 16px;
+  padding: 15px 25px;
+  cursor: pointer;
+}
+
+.preview.play .glow {
+  animation: glowIn 3s ease-in-out forwards;
+}
+
+.preview.play .brand {
+  animation: logoIn 3s ease-in-out forwards;
+}
+
+.preview.play .brand h1 {
+  animation: titleIn 3s ease-in-out both;
+}
+
+@keyframes glowIn {
+  0% { opacity: 0; transform: scale(.3); }
+  35% { opacity: .35; transform: scale(1); }
+  70% { opacity: .22; transform: scale(1.3); }
+  100% { opacity: .08; transform: scale(1.5); }
+}
+
+@keyframes logoIn {
+  0% { opacity: 0; transform: scale(.65) translateY(25px); }
+  35% { opacity: 1; transform: scale(1.06) translateY(0); }
+  65% { opacity: 1; transform: scale(1) translateY(0); }
+  85% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+
+@keyframes titleIn {
+  0%, 38% { opacity: 0; transform: translateY(12px); }
+  60%, 85% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; }
+}
+
+#result {
+  position: fixed;
+  inset: 0;
+  background: #f7faff;
+  color: #102044;
+  display: none;
+  place-items: center;
+  text-align: center;
+  padding: 25px;
+}
+
+#result h2 { font-size: 30px; }
+#result p { color: #52627d; }
+
+@media (prefers-reduced-motion: reduce) {
+  .preview.play .glow,
+  .preview.play .brand,
+  .preview.play .brand h1 {
+    animation-duration: .01ms;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="preview" id="preview">
+  <div class="glow"></div>
+
+  <div class="brand">
+    <img src="assets/nasto-logo.png"
+         alt="Логотип НАСТО"
+         onerror="this.style.display='none'">
+    <h1>НАСТО</h1>
+  </div>
+
+  <div class="controls">
+    <button id="start">Запустить анимацию</button>
+  </div>
+</div>
+
+<div id="result">
+  <div>
+    <h2>НАСТО</h2>
+    <p>Сильные знания. Большие возможности.</p>
+    <button id="repeat">Повторить заставку</button>
+  </div>
+</div>
+
+<script>
+const preview = document.getElementById('preview');
+const result = document.getElementById('result');
+const start = document.getElementById('start');
+const repeat = document.getElementById('repeat');
+let finishTimer;
+
+function play() {
+  clearTimeout(finishTimer);
+  result.style.display = 'none';
+  preview.style.display = 'grid';
+  preview.classList.remove('play');
+
+  void preview.offsetWidth;
+  preview.classList.add('play');
+
+  finishTimer = setTimeout(() => {
+    preview.style.display = 'none';
+    result.style.display = 'grid';
+  }, 3000);
+}
+
+start.addEventListener('click', play);
+repeat.addEventListener('click', play);
+</script>
+</body>
+</html>
